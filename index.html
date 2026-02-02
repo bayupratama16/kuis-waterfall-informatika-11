@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id" class="h-full">
   <head>
     <meta charset="UTF-8" />
@@ -148,6 +148,32 @@
       }
       .nav-btn.exit-btn:hover {
         background: rgba(239, 68, 68, 0.5);
+      }
+
+      .music-btn {
+        position: fixed;
+        bottom: 15px;
+        right: 15px;
+        background: rgba(124, 58, 237, 0.3);
+        border: 2px solid rgba(124, 58, 237, 0.5);
+        color: white;
+        padding: 10px 14px;
+        border-radius: 50px;
+        font-size: 18px;
+        cursor: pointer;
+        transition: all 0.3s;
+        z-index: 99;
+        font-family: "Poppins", sans-serif;
+      }
+      .music-btn:hover {
+        background: rgba(124, 58, 237, 0.5);
+        transform: scale(1.1);
+      }
+      .music-btn.disabled {
+        opacity: 0.5;
+      }
+      .music-btn.disabled:hover {
+        transform: scale(1);
       }
 
       /* Intro Screen */
@@ -688,7 +714,7 @@
         padding: 12px 15px;
         border-radius: 0 10px 10px 0;
         margin-bottom: 15px;
-        font-size: 12px;
+        font-size: 14px;
         color: #e2e8f0;
         line-height: 1.6;
       }
@@ -701,7 +727,7 @@
       }
 
       .question-text {
-        font-size: 15px;
+        font-size: 14px;
         font-weight: 600;
         color: white;
         margin-bottom: 15px;
@@ -945,24 +971,7 @@
         color: #e2e8f0;
         font-size: 12px;
         line-height: 1.6;
-        margin-bottom: 8px;
-      }
-      .feedback-popup-answer {
-        background: rgba(0, 0, 0, 0.3);
-        padding: 12px;
-        border-radius: 10px;
-        margin: 10px 0;
-        font-size: 12px;
-        text-align: left;
-      }
-      .answer-correct {
-        color: #34d399;
-      }
-      .answer-incorrect {
-        color: #ef4444;
-      }
-      .answer-label {
-        font-weight: 600;
+        margin-bottom: 15px;
       }
 
       /* Result Screen */
@@ -1186,7 +1195,12 @@
                   class="comparison-img"
                   src="https://github.com/bayupratama16/gambar/blob/main/ChatGPT%20Image%20Jan%204,%202026,%2005_18_22%20PM.png?raw=true"
                   alt="Sebelum - Tanpa Metodologi"
-                  onerror="this.src=''; this.alt='Gambar gagal dimuat'; this.style.background='linear-gradient(135deg, #1a1a2e, #16213e)';"
+                  onerror="
+                    this.src = '';
+                    this.alt = 'Gambar gagal dimuat';
+                    this.style.background =
+                      'linear-gradient(135deg, #1a1a2e, #16213e)';
+                  "
                 />
                 <div class="comparison-overlay before-overlay">
                   <div class="overlay-icon">😰</div>
@@ -1202,7 +1216,12 @@
                   class="comparison-img"
                   src="https://github.com/bayupratama16/gambar/blob/main/ChatGPT%20Image%20Jan%204,%202026,%2005_19_46%20PM.png?raw=true"
                   alt="Sesudah - Dengan Waterfall"
-                  onerror="this.src=''; this.alt='Gambar gagal dimuat'; this.style.background='linear-gradient(135deg, #0f172a, #1e293b)';"
+                  onerror="
+                    this.src = '';
+                    this.alt = 'Gambar gagal dimuat';
+                    this.style.background =
+                      'linear-gradient(135deg, #0f172a, #1e293b)';
+                  "
                 />
                 <div class="comparison-overlay after-overlay">
                   <div class="overlay-icon">🚀</div>
@@ -1226,12 +1245,12 @@
             <p class="intro-desc">
               Setiap aplikasi hebat dimulai dari <strong>algoritma</strong> dan
               <strong>metodologi</strong> yang tepat. Model
-              <em>waterfall</em> memastikan pengembangan berjalan terstruktur
+              <em>Waterfall</em> memastikan pengembangan berjalan terstruktur
               dari analisis hingga <em>deployment</em>.
             </p>
             <p class="intro-question">
               Siap menguji pemahamanmu tentang alur pengembangan
-              <em>waterfall</em>?
+              <em>Waterfall</em>?
             </p>
             <button
               class="btn btn-primary"
@@ -1252,7 +1271,7 @@
           <h1 class="bumper-title">Kuis Interaktif</h1>
           <h2 class="bumper-subtitle">Alur Pengembangan <em>Waterfall</em></h2>
           <p class="bumper-topic">
-            Informatika | Kelas XI SMA | Topik: Algoritma
+            Informatika | Kelas XI SMA | Topik: Algoritma &amp; <em>SDLC</em>
           </p>
           <div class="name-input-wrapper">
             <div
@@ -1370,8 +1389,6 @@
       <div class="feedback-popup" id="feedbackPopup">
         <div class="feedback-popup-icon" id="feedbackIcon">✅</div>
         <div class="feedback-popup-title" id="feedbackTitle">Benar!</div>
-        <div class="feedback-popup-message" id="feedbackMessage"></div>
-        <div class="feedback-popup-answer" id="feedbackAnswer"></div>
         <button class="btn btn-primary btn-sm" onclick="closeFeedback()">
           Lanjut
         </button>
@@ -1398,6 +1415,10 @@
           </div>
         </div>
       </div>
+      <!-- Music Control Button -->
+      <button class="music-btn" id="musicBtn" onclick="toggleMusic()">
+        🔊
+      </button>
       <!-- Instructions Modal -->
       <div class="modal-overlay" id="instructionsModal">
         <div class="modal">
@@ -1413,9 +1434,9 @@
           <div class="instruction-item">
             <span class="instruction-icon">📖</span>
             <div class="instruction-text">
-              <strong>Stimulus:</strong> Setiap soal dilengkapi dengan stimulus
-              berupa kasus atau skenario. Baca dengan cermat karena berisi
-              informasi penting untuk menjawab pertanyaan.
+              <strong><em>Stimulus</em>:</strong> Setiap soal dilengkapi dengan
+              <em>stimulus</em> berupa kasus atau skenario. Baca dengan cermat
+              karena berisi informasi penting untuk menjawab pertanyaan.
             </div>
           </div>
           <div class="instruction-item">
@@ -1462,7 +1483,7 @@
             </div>
           </div>
           <div class="instruction-item">
-            <span class="instruction-icon">🏆</span>
+            <span class="instruction-icon">��</span>
             <div class="instruction-text">
               <strong>Penilaian:</strong> Setiap jawaban benar mendapat 10 poin,
               bonus benar mendapat 5 poin. Total skor dan waktu menentukan
@@ -1473,7 +1494,7 @@
             <span class="instruction-icon">🚪</span>
             <div class="instruction-text">
               <strong>Keluar:</strong> Jika ingin keluar di tengah kuis, tekan
-              tombol "Keluar" di pojok kanan atas. Perhatian: skor tidak akan
+              tombol "✕ Keluar" di pojok kanan atas. Perhatian: skor tidak akan
               tersimpan jika keluar sebelum selesai.
             </div>
           </div>
@@ -1519,6 +1540,10 @@
       let currentFillIndex = -1;
       let timerInterval = null;
       let elapsedSeconds = 0;
+      let musicEnabled = true;
+      let backgroundMusic = null;
+      let correctSound = null;
+      let incorrectSound = null;
 
       function getLeaderboard() {
         try {
@@ -1533,6 +1558,59 @@
           localStorage.setItem("waterfall_lb_v4", JSON.stringify(data));
         } catch (e) {
           console.log("Storage error");
+        }
+      }
+
+      function initAudio() {
+        if (!backgroundMusic) {
+          backgroundMusic = new Audio(
+            "https://github.com/bayupratama16/music/raw/main/flash-quiz-loop-236356.mp3",
+          );
+          backgroundMusic.loop = true;
+          backgroundMusic.volume = 0.48;
+        }
+        if (!correctSound) {
+          correctSound = new Audio(
+            "https://github.com/bayupratama16/music/raw/main/correct-472358.mp3",
+          );
+          correctSound.volume = 0.7;
+        }
+        if (!incorrectSound) {
+          incorrectSound = new Audio(
+            "https://github.com/bayupratama16/music/raw/main/incorrect-293358.mp3",
+          );
+          incorrectSound.volume = 0.7;
+        }
+      }
+
+      function toggleMusic() {
+        if (!backgroundMusic) initAudio();
+        musicEnabled = !musicEnabled;
+        const btn = document.getElementById("musicBtn");
+        if (musicEnabled) {
+          btn.textContent = "🔊";
+          btn.classList.remove("disabled");
+          backgroundMusic.play().catch(() => {});
+        } else {
+          btn.textContent = "🔇";
+          btn.classList.add("disabled");
+          backgroundMusic.pause();
+        }
+      }
+
+      function playCorrectSound() {
+        if (!correctSound) initAudio();
+        if (musicEnabled) {
+          correctSound.currentTime = 0;
+          correctSound.play().catch(() => {});
+        }
+      }
+
+      function playIncorrectSound() {
+        if (!incorrectSound) initAudio();
+        if (musicEnabled) {
+          incorrectSound.currentTime = 0;
+          incorrectSound.play().catch(() => {});
         }
       }
       function addToLeaderboard(name, totalScore, time) {
@@ -1865,9 +1943,7 @@
         rows.forEach((row, ri) => {
           html += '<div class="keyboard-row">';
           if (ri === 2 && !symbolMode)
-            html += `<button class="key special ${
-              capsLock ? "active" : ""
-            }" onclick="toggleCaps()">⬆ CAPS</button>`;
+            html += `<button class="key special ${capsLock ? "active" : ""}" onclick="toggleCaps()">⬆ CAPS</button>`;
           for (let char of row) {
             const display =
               !symbolMode && !capsLock ? char.toLowerCase() : char;
@@ -1879,9 +1955,7 @@
           html += "</div>";
         });
         html += `<div class="keyboard-row">
-        <button class="key special" onclick="toggleSymbol()">${
-          symbolMode ? "ABC" : "123"
-        }</button>
+        <button class="key special" onclick="toggleSymbol()">${symbolMode ? "ABC" : "123"}</button>
         <button class="key space" onclick="typeChar(' ')">SPASI</button>
         <button class="key special" onclick="typeChar('.')">.</button>
       </div>`;
@@ -1979,7 +2053,7 @@
           const rect = slider.getBoundingClientRect();
           let pos = Math.max(
             5,
-            Math.min(95, ((x - rect.left) / rect.width) * 100)
+            Math.min(95, ((x - rect.left) / rect.width) * 100),
           );
           after.style.clipPath = `inset(0 0 0 ${pos}%)`;
           handle.style.left = pos + "%";
@@ -2000,14 +2074,14 @@
             dragging = true;
             update(e.touches[0].clientX);
           },
-          { passive: true }
+          { passive: true },
         );
         slider.addEventListener(
           "touchmove",
           (e) => {
             if (dragging) update(e.touches[0].clientX);
           },
-          { passive: true }
+          { passive: true },
         );
         slider.addEventListener("touchend", () => {
           dragging = false;
@@ -2127,9 +2201,8 @@
         document.getElementById("nextBtn").style.display = canProceed
           ? "inline-block"
           : "none";
-        document.getElementById("quizProgress").textContent = `Soal ${
-          currentQuestion + 1
-        }/${shuffledQuestions.length}`;
+        document.getElementById("quizProgress").textContent =
+          `Soal ${currentQuestion + 1}/${shuffledQuestions.length}`;
 
         const letters = ["A", "B", "C", "D", "E"];
         let html = `
@@ -2138,7 +2211,7 @@
           <div class="question-topic">📚 ${q.topic}</div>
         </div>
         <div class="stimulus-box">
-          <span class="stimulus-label">📖 STIMULUS</span>
+          <span class="stimulus-label">📖 <em>STIMULUS</em></span>
           ${q.stimulus}
         </div>
         <div class="question-text">${q.question}</div>
@@ -2148,39 +2221,25 @@
               let classes = "choice-btn";
               if (state.answered) {
                 const correctShuffledIndex = state.shuffledChoices.findIndex(
-                  (sc) => sc.originalIndex === q.correct
+                  (sc) => sc.originalIndex === q.correct,
                 );
-                if (i === correctShuffledIndex) classes += " correct";
-                else if (
-                  i === state.selectedAnswer &&
-                  state.selectedAnswer !== correctShuffledIndex
-                )
-                  classes += " incorrect";
+                if (i === correctShuffledIndex && state.isCorrect)
+                  classes += " correct";
+                else if (i === state.selectedAnswer)
+                  classes += state.isCorrect ? " correct" : " incorrect";
               } else if (i === state.selectedAnswer) {
                 classes += " selected";
               }
-              return `<button class="${classes}" data-index="${i}" ${
-                state.answered ? "disabled" : ""
-              } onclick="selectChoice(${i})">
-              <span class="choice-letter">${letters[i]}</span><span>${
-                c.text
-              }</span>
+              return `<button class="${classes}" data-index="${i}" ${state.answered ? "disabled" : ""} onclick="selectChoice(${i})">
+              <span class="choice-letter">${letters[i]}</span><span>${c.text}</span>
             </button>`;
             })
             .join("")}
         </div>
         <div class="bonus-section" id="bonusSection">
-          <div class="bonus-title">⭐ BONUS (+5 poin) ${
-            q.bonus.type === "multiple"
-              ? "• Pilihan Ganda Kompleks"
-              : "• Isian Singkat"
-          }</div>
+          <div class="bonus-title">⭐ BONUS (+5 poin) ${q.bonus.type === "multiple" ? "• Pilihan Ganda Kompleks" : "• Isian Singkat"}</div>
           ${renderBonus(q, state)}
-          ${
-            !state.bonusSubmitted
-              ? '<button class="btn btn-sm" style="background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #1e1b4b; margin-top: 10px; width: 100%;" onclick="submitBonus()">Kirim Jawaban Bonus</button>'
-              : ""
-          }
+          ${!state.bonusSubmitted ? '<button class="btn btn-sm" style="background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #1e1b4b; margin-top: 10px; width: 100%;" onclick="submitBonus()">Kirim Jawaban Bonus</button>' : ""}
         </div>
       `;
         document.getElementById("questionCard").innerHTML = html;
@@ -2192,17 +2251,9 @@
         const bonusSection = document.getElementById("bonusSection");
         if (bonusSection) {
           bonusSection.innerHTML = `
-          <div class="bonus-title">⭐ BONUS (+5 poin) ${
-            q.bonus.type === "multiple"
-              ? "• Pilihan Ganda Kompleks"
-              : "• Isian Singkat"
-          }</div>
+          <div class="bonus-title">⭐ BONUS (+5 poin) ${q.bonus.type === "multiple" ? "• Pilihan Ganda Kompleks" : "• Isian Singkat"}</div>
           ${renderBonus(q, state)}
-          ${
-            !state.bonusSubmitted
-              ? '<button class="btn btn-sm" style="background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #1e1b4b; margin-top: 10px; width: 100%;" onclick="submitBonus()">Kirim Jawaban Bonus</button>'
-              : ""
-          }
+          ${!state.bonusSubmitted ? '<button class="btn btn-sm" style="background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #1e1b4b; margin-top: 10px; width: 100%;" onclick="submitBonus()">Kirim Jawaban Bonus</button>' : ""}
         `;
         }
       }
@@ -2253,9 +2304,7 @@
               ? ""
               : `toggleMultipleChoice(${i})`;
             const checkIcon = isSelected ? "☑" : "☐";
-            html += `<button class="${choiceClass}" onclick="${clickHandler}" ${
-              state.bonusSubmitted ? "disabled" : ""
-            }>
+            html += `<button class="${choiceClass}" onclick="${clickHandler}" ${state.bonusSubmitted ? "disabled" : ""}>
             <span class="bonus-check">${checkIcon}</span>
             <span>${choice}</span>
           </button>`;
@@ -2313,7 +2362,7 @@
           bonusOk = state.fillValues.every(
             (val, i) =>
               (val || "").toLowerCase().trim() ===
-              b.answers[i].toLowerCase().trim()
+              b.answers[i].toLowerCase().trim(),
           );
         } else if (b.type === "multiple") {
           const selected = state.multipleSelected || [];
@@ -2345,16 +2394,12 @@
         document.getElementById("feedbackTitle").textContent = isCorrect
           ? "Benar!"
           : "Salah!";
-        document.getElementById("feedbackMessage").innerHTML = q.explanation;
 
-        const correctText = q.choices[q.correct];
-        const userText = state.shuffledChoices[state.selectedAnswer].text;
-
-        let ansHtml = isCorrect
-          ? `<div><span class="answer-label">Jawaban:</span> <span class="answer-correct">${correctText}</span></div>`
-          : `<div><span class="answer-label">Jawabanmu:</span> <span class="answer-incorrect">${userText}</span></div>
-           <div style="margin-top:6px"><span class="answer-label">Jawaban Benar:</span> <span class="answer-correct">${correctText}</span></div>`;
-        document.getElementById("feedbackAnswer").innerHTML = ansHtml;
+        if (isCorrect) {
+          playCorrectSound();
+        } else {
+          playIncorrectSound();
+        }
       }
 
       function closeFeedback() {
@@ -2377,7 +2422,7 @@
         stopTimer();
         const totalScore = score + bonusScore;
         const pct = Math.round(
-          (correctAnswers / shuffledQuestions.length) * 100
+          (correctAnswers / shuffledQuestions.length) * 100,
         );
         addToLeaderboard(playerName, totalScore, elapsedSeconds);
 
@@ -2397,9 +2442,8 @@
         document.getElementById("resultIcon").textContent = icon;
         document.getElementById("resultTitle").textContent = title;
         document.getElementById("resultScore").textContent = score;
-        document.getElementById(
-          "resultBonus"
-        ).textContent = `+ Bonus: ${bonusScore}`;
+        document.getElementById("resultBonus").textContent =
+          `+ Bonus: ${bonusScore}`;
         document.getElementById("resultMessage").innerHTML = msg;
         document.getElementById("correctCount").textContent = correctAnswers;
         document.getElementById("incorrectCount").textContent =
@@ -2409,9 +2453,8 @@
           formatTime(elapsedSeconds);
         document.getElementById("totalScore").textContent = totalScore;
 
-        document.getElementById(
-          "resultLeaderboard"
-        ).innerHTML = `<div class="leaderboard-title">🏆 Papan Peringkat (<em>Leaderboard</em>)</div><div class="leaderboard-list" id="resultLbList"></div>`;
+        document.getElementById("resultLeaderboard").innerHTML =
+          `<div class="leaderboard-title">🏆 Papan Peringkat (<em>Leaderboard</em>)</div><div class="leaderboard-list" id="resultLbList"></div>`;
         renderLeaderboard("resultLbList", {
           name: playerName,
           score: totalScore,
@@ -2424,6 +2467,10 @@
       document.addEventListener("DOMContentLoaded", () => {
         updateStartButton();
         initSlider();
+        initAudio();
+        if (musicEnabled && backgroundMusic) {
+          backgroundMusic.play().catch(() => {});
+        }
       });
 
       if (window.elementSdk) {
@@ -2449,7 +2496,7 @@
           if (b) {
             var d = b.createElement("script");
             d.innerHTML =
-              "window.__CF$cv$params={r:'9b8a25eee385afbb',t:'MTc2NzUyMzU0NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
+              "window.__CF$cv$params={r:'9c77bd1ae15c38f0',t:'MTc3MDAxNDg2My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
             b.getElementsByTagName("head")[0].appendChild(d);
           }
         }
