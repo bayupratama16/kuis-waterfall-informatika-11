@@ -1,0 +1,2528 @@
+<!doctype html>
+<html lang="id" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Kuis Alur Pengembangan Waterfall</title>
+    <script src="/_sdk/element_sdk.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        box-sizing: border-box;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        font-family: "Poppins", sans-serif;
+        overflow: hidden;
+      }
+
+      .app-container {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          135deg,
+          #0f0c29 0%,
+          #302b63 50%,
+          #24243e 100%
+        );
+        position: relative;
+        overflow: hidden;
+      }
+
+      .bg-shapes {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: 0;
+      }
+      .shape {
+        position: absolute;
+        border-radius: 50%;
+        opacity: 0.1;
+        animation: float 20s infinite ease-in-out;
+      }
+      .shape:nth-child(1) {
+        width: 300px;
+        height: 300px;
+        background: #00d4ff;
+        top: -100px;
+        left: -100px;
+      }
+      .shape:nth-child(2) {
+        width: 200px;
+        height: 200px;
+        background: #7c3aed;
+        top: 50%;
+        right: -50px;
+        animation-delay: -5s;
+      }
+      .shape:nth-child(3) {
+        width: 150px;
+        height: 150px;
+        background: #f472b6;
+        bottom: -50px;
+        left: 30%;
+        animation-delay: -10s;
+      }
+      .shape:nth-child(4) {
+        width: 250px;
+        height: 250px;
+        background: #34d399;
+        bottom: 20%;
+        right: 20%;
+        animation-delay: -15s;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translate(0, 0) rotate(0deg);
+        }
+        25% {
+          transform: translate(30px, -30px) rotate(90deg);
+        }
+        50% {
+          transform: translate(0, 20px) rotate(180deg);
+        }
+        75% {
+          transform: translate(-30px, -10px) rotate(270deg);
+        }
+      }
+
+      .screen {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 1;
+        padding: 20px;
+        overflow: hidden;
+      }
+      .screen.active {
+        display: flex;
+      }
+
+      .nav-btn {
+        position: absolute;
+        top: 15px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 25px;
+        font-size: 13px;
+        cursor: pointer;
+        transition: all 0.3s;
+        z-index: 100;
+        font-family: "Poppins", sans-serif;
+      }
+      .nav-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+      .nav-btn.left {
+        left: 15px;
+      }
+      .nav-btn.right {
+        right: 15px;
+      }
+      .nav-btn.exit-btn {
+        background: rgba(239, 68, 68, 0.3);
+        border-color: rgba(239, 68, 68, 0.5);
+      }
+      .nav-btn.exit-btn:hover {
+        background: rgba(239, 68, 68, 0.5);
+      }
+
+      .music-btn {
+        position: fixed;
+        bottom: 15px;
+        right: 15px;
+        background: rgba(124, 58, 237, 0.3);
+        border: 2px solid rgba(124, 58, 237, 0.5);
+        color: white;
+        padding: 10px 14px;
+        border-radius: 50px;
+        font-size: 18px;
+        cursor: pointer;
+        transition: all 0.3s;
+        z-index: 99;
+        font-family: "Poppins", sans-serif;
+      }
+      .music-btn:hover {
+        background: rgba(124, 58, 237, 0.5);
+        transform: scale(1.1);
+      }
+      .music-btn.disabled {
+        opacity: 0.5;
+      }
+      .music-btn.disabled:hover {
+        transform: scale(1);
+      }
+
+      /* Intro Screen */
+      .intro-content {
+        display: flex;
+        width: 100%;
+        max-width: 1100px;
+        height: 85%;
+        gap: 40px;
+        align-items: center;
+        padding: 20px;
+      }
+      .intro-visual {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .comparison-slider {
+        position: relative;
+        width: 100%;
+        max-width: 450px;
+        height: 340px;
+        border-radius: 20px;
+        overflow: hidden;
+        cursor: ew-resize;
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+        margin: 0 auto;
+      }
+      .comparison-before,
+      .comparison-after {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+      .comparison-after {
+        clip-path: inset(0 0 0 50%);
+      }
+      .comparison-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .comparison-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0.9) 0%,
+          rgba(0, 0, 0, 0.5) 60%,
+          transparent 100%
+        );
+        padding: 25px 20px 20px;
+        text-align: center;
+      }
+      .overlay-icon {
+        font-size: 32px;
+        margin-bottom: 8px;
+      }
+      .overlay-title {
+        color: white;
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 5px;
+      }
+      .overlay-desc {
+        font-size: 11px;
+        line-height: 1.5;
+      }
+      .before-overlay .overlay-desc {
+        color: #fca5a5;
+      }
+      .after-overlay .overlay-desc {
+        color: #86efac;
+      }
+
+      .slider-handle {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 4px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+        pointer-events: none;
+      }
+      .slider-line {
+        flex: 1;
+        width: 3px;
+        background: white;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+      }
+      .slider-button {
+        width: 44px;
+        height: 44px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        color: #1e1b4b;
+        font-size: 14px;
+        font-weight: bold;
+      }
+      .slider-instruction {
+        text-align: center;
+        color: #94a3b8;
+        font-size: 12px;
+        margin-top: 15px;
+      }
+
+      .intro-text {
+        flex: 1;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .intro-title {
+        font-size: 28px;
+        font-weight: 800;
+        margin-bottom: 15px;
+        line-height: 1.2;
+        background: linear-gradient(135deg, #00d4ff, #7c3aed);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .intro-desc {
+        font-size: 14px;
+        color: #cbd5e1;
+        line-height: 1.7;
+        margin-bottom: 15px;
+      }
+      .intro-question {
+        font-size: 16px;
+        font-weight: 600;
+        color: #f472b6;
+        margin-bottom: 25px;
+      }
+
+      .btn {
+        padding: 14px 32px;
+        font-size: 15px;
+        font-weight: 600;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-family: "Poppins", sans-serif;
+      }
+      .btn-primary {
+        background: linear-gradient(135deg, #00d4ff, #7c3aed);
+        color: white;
+        box-shadow: 0 10px 30px rgba(124, 58, 237, 0.4);
+      }
+      .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 40px rgba(124, 58, 237, 0.5);
+      }
+      .btn-primary:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+      }
+      .btn-secondary {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+      }
+      .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+      .btn-sm {
+        padding: 10px 20px;
+        font-size: 13px;
+      }
+      .btn-danger {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: white;
+      }
+
+      /* Bumper Screen */
+      .bumper-content {
+        text-align: center;
+        width: 100%;
+        max-width: 500px;
+      }
+      .bumper-icon {
+        font-size: 60px;
+        margin-bottom: 15px;
+        animation: bounce 2s infinite;
+      }
+      @keyframes bounce {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-15px);
+        }
+      }
+      .bumper-title {
+        font-size: 36px;
+        font-weight: 800;
+        color: white;
+        margin-bottom: 8px;
+      }
+      .bumper-subtitle {
+        font-size: 20px;
+        color: #00d4ff;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+      .bumper-topic {
+        font-size: 14px;
+        color: #94a3b8;
+        margin-bottom: 25px;
+      }
+      .bumper-buttons {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .name-input-wrapper {
+        margin-bottom: 25px;
+      }
+      .name-input-display {
+        background: rgba(255, 255, 255, 0.1);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50px;
+        padding: 14px 24px;
+        min-width: 300px;
+        min-height: 50px;
+        color: white;
+        font-size: 18px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-family: "Poppins", sans-serif;
+      }
+      .name-input-display.empty::before {
+        content: "Ketuk untuk memasukkan nama...";
+        color: #94a3b8;
+      }
+      .name-input-display:focus,
+      .name-input-display.active {
+        border-color: #7c3aed;
+        outline: none;
+      }
+
+      /* Virtual Keyboard */
+      .keyboard-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 2000;
+        padding: 20px;
+      }
+      .keyboard-overlay.active {
+        display: flex;
+      }
+      .keyboard-container {
+        width: 100%;
+        max-width: 700px;
+      }
+      .keyboard-input-area {
+        background: rgba(255, 255, 255, 0.1);
+        border: 2px solid #7c3aed;
+        border-radius: 15px;
+        padding: 15px 20px;
+        margin-bottom: 15px;
+        min-height: 55px;
+        color: white;
+        font-size: 20px;
+        text-align: center;
+        font-family: "Poppins", sans-serif;
+        word-wrap: break-word;
+      }
+      .keyboard-input-area.empty::before {
+        content: "Ketik di sini...";
+        color: #64748b;
+      }
+      .keyboard-label {
+        color: #94a3b8;
+        font-size: 14px;
+        margin-bottom: 10px;
+        text-align: center;
+      }
+      .virtual-keyboard {
+        background: rgba(30, 30, 50, 0.95);
+        border-radius: 16px;
+        padding: 12px;
+      }
+      .keyboard-row {
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+        margin-bottom: 6px;
+      }
+      .key {
+        min-width: 38px;
+        height: 45px;
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        color: white;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.15s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Poppins", sans-serif;
+      }
+      .key:hover {
+        background: rgba(255, 255, 255, 0.25);
+      }
+      .key:active {
+        background: #7c3aed;
+        transform: scale(0.95);
+      }
+      .key.space {
+        min-width: 200px;
+      }
+      .key.special {
+        min-width: 60px;
+        background: rgba(124, 58, 237, 0.4);
+        font-size: 12px;
+      }
+      .key.active {
+        background: #7c3aed;
+      }
+      .keyboard-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 15px;
+        justify-content: center;
+      }
+
+      /* Modal */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.85);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        padding: 20px;
+      }
+      .modal-overlay.active {
+        display: flex;
+      }
+      .modal {
+        background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+        border-radius: 20px;
+        padding: 25px;
+        max-width: 600px;
+        width: 100%;
+        max-height: 85%;
+        overflow-y: auto;
+        border: 2px solid rgba(255, 255, 255, 0.1);
+      }
+      .modal-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+      .instruction-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 12px;
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+      }
+      .instruction-icon {
+        font-size: 24px;
+        flex-shrink: 0;
+        width: 32px;
+        text-align: center;
+      }
+      .instruction-text {
+        color: #e2e8f0;
+        font-size: 13px;
+        line-height: 1.6;
+      }
+      .instruction-text strong {
+        color: #00d4ff;
+      }
+      .modal-close {
+        margin-top: 15px;
+        width: 100%;
+      }
+
+      .confirm-modal {
+        background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+        border-radius: 20px;
+        padding: 30px;
+        max-width: 400px;
+        width: 100%;
+        text-align: center;
+        border: 2px solid rgba(239, 68, 68, 0.5);
+      }
+      .confirm-icon {
+        font-size: 50px;
+        margin-bottom: 15px;
+      }
+      .confirm-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 10px;
+      }
+      .confirm-message {
+        font-size: 14px;
+        color: #94a3b8;
+        margin-bottom: 20px;
+        line-height: 1.6;
+      }
+      .confirm-buttons {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+      }
+
+      /* Quiz Screen */
+      .quiz-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+        padding-top: 50px;
+      }
+      .quiz-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 15px;
+        margin-bottom: 10px;
+      }
+      .quiz-timer {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        padding: 8px 18px;
+        border-radius: 25px;
+        color: white;
+        font-size: 16px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .quiz-progress {
+        color: white;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .quiz-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        overflow: hidden;
+      }
+      .question-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px);
+        border-radius: 16px;
+        padding: 15px 20px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+      }
+      .question-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .question-type {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: linear-gradient(135deg, #7c3aed, #a855f7);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 15px;
+        font-size: 11px;
+        font-weight: 600;
+      }
+      .question-topic {
+        background: rgba(0, 212, 255, 0.2);
+        color: #00d4ff;
+        padding: 4px 12px;
+        border-radius: 15px;
+        font-size: 11px;
+        font-weight: 500;
+      }
+
+      .stimulus-box {
+        background: rgba(0, 212, 255, 0.1);
+        border-left: 4px solid #00d4ff;
+        padding: 12px 15px;
+        border-radius: 0 10px 10px 0;
+        margin-bottom: 15px;
+        font-size: 14px;
+        color: #e2e8f0;
+        line-height: 1.6;
+      }
+      .stimulus-label {
+        color: #00d4ff;
+        font-weight: 600;
+        font-size: 11px;
+        margin-bottom: 5px;
+        display: block;
+      }
+
+      .question-text {
+        font-size: 14px;
+        font-weight: 600;
+        color: white;
+        margin-bottom: 15px;
+        line-height: 1.5;
+      }
+
+      .choices-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .choice-btn {
+        padding: 12px 15px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        color: white;
+        font-size: 13px;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-align: left;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .choice-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: #7c3aed;
+      }
+      .choice-btn.selected {
+        background: rgba(124, 58, 237, 0.3);
+        border-color: #7c3aed;
+      }
+      .choice-btn.correct {
+        background: rgba(52, 211, 153, 0.3);
+        border-color: #34d399;
+      }
+      .choice-btn.incorrect {
+        background: rgba(239, 68, 68, 0.3);
+        border-color: #ef4444;
+      }
+      .choice-btn:disabled {
+        cursor: not-allowed;
+        opacity: 0.8;
+      }
+      .choice-letter {
+        width: 28px;
+        height: 28px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 12px;
+        flex-shrink: 0;
+      }
+
+      .bonus-section {
+        margin-top: 15px;
+        padding: 12px;
+        background: linear-gradient(
+          135deg,
+          rgba(251, 191, 36, 0.1),
+          rgba(245, 158, 11, 0.1)
+        );
+        border: 2px dashed #fbbf24;
+        border-radius: 10px;
+      }
+      .bonus-title {
+        color: #fbbf24;
+        font-size: 12px;
+        font-weight: 700;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .bonus-instruction {
+        color: #94a3b8;
+        font-size: 11px;
+        margin-bottom: 10px;
+      }
+
+      .fill-blank-container {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px;
+        color: white;
+        font-size: 12px;
+      }
+      .fill-blank-input {
+        background: rgba(0, 0, 0, 0.3);
+        border: 2px solid #fbbf24;
+        border-radius: 6px;
+        padding: 8px 12px;
+        min-width: 120px;
+        color: white;
+        font-size: 12px;
+        font-family: "Poppins", sans-serif;
+        text-align: center;
+        cursor: pointer;
+      }
+      .fill-blank-input:focus {
+        outline: none;
+        border-color: #f59e0b;
+      }
+      .fill-blank-input.correct {
+        border-color: #34d399;
+        background: rgba(52, 211, 153, 0.2);
+      }
+      .fill-blank-input.incorrect {
+        border-color: #ef4444;
+        background: rgba(239, 68, 68, 0.2);
+      }
+      .fill-blank-input.placeholder {
+        color: #94a3b8;
+      }
+
+      .bonus-choices {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-top: 8px;
+      }
+      .bonus-choice-btn {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 14px;
+        background: rgba(0, 0, 0, 0.2);
+        border: 2px solid rgba(251, 191, 36, 0.3);
+        border-radius: 8px;
+        color: white;
+        font-size: 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-align: left;
+        font-family: "Poppins", sans-serif;
+      }
+      .bonus-choice-btn:hover:not(:disabled) {
+        background: rgba(251, 191, 36, 0.1);
+        border-color: #fbbf24;
+      }
+      .bonus-choice-btn.selected {
+        background: rgba(251, 191, 36, 0.2);
+        border-color: #fbbf24;
+      }
+      .bonus-choice-btn.correct {
+        background: rgba(52, 211, 153, 0.2);
+        border-color: #34d399;
+      }
+      .bonus-choice-btn.incorrect {
+        background: rgba(239, 68, 68, 0.2);
+        border-color: #ef4444;
+      }
+      .bonus-choice-btn.missed {
+        background: rgba(52, 211, 153, 0.1);
+        border-color: #34d399;
+        border-style: dashed;
+      }
+      .bonus-choice-btn:disabled {
+        cursor: not-allowed;
+        opacity: 0.9;
+      }
+      .bonus-check {
+        font-size: 16px;
+        min-width: 20px;
+        text-align: center;
+      }
+
+      .quiz-nav {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 10px;
+        padding-top: 10px;
+      }
+
+      .feedback-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s;
+      }
+      .feedback-overlay.show {
+        opacity: 1;
+        visibility: visible;
+      }
+      .feedback-popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.8);
+        background: linear-gradient(135deg, #1e1b4b, #312e81);
+        border-radius: 20px;
+        padding: 20px;
+        max-width: 450px;
+        width: 90%;
+        z-index: 1001;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s;
+        text-align: center;
+        border: 3px solid;
+      }
+      .feedback-popup.show {
+        opacity: 1;
+        visibility: visible;
+        transform: translate(-50%, -50%) scale(1);
+      }
+      .feedback-popup.correct {
+        border-color: #34d399;
+      }
+      .feedback-popup.incorrect {
+        border-color: #ef4444;
+      }
+      .feedback-popup-icon {
+        font-size: 45px;
+        margin-bottom: 10px;
+      }
+      .feedback-popup-title {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+      .feedback-popup.correct .feedback-popup-title {
+        color: #34d399;
+      }
+      .feedback-popup.incorrect .feedback-popup-title {
+        color: #ef4444;
+      }
+      .feedback-popup-message {
+        color: #e2e8f0;
+        font-size: 12px;
+        line-height: 1.6;
+        margin-bottom: 15px;
+      }
+
+      /* Result Screen */
+      .result-content {
+        text-align: center;
+        max-width: 550px;
+        width: 100%;
+        overflow-y: auto;
+        max-height: 95%;
+        padding: 10px;
+      }
+      .result-icon {
+        font-size: 60px;
+        margin-bottom: 12px;
+      }
+      .result-title {
+        font-size: 32px;
+        font-weight: 800;
+        color: white;
+        margin-bottom: 8px;
+      }
+      .result-score {
+        font-size: 48px;
+        font-weight: 800;
+        background: linear-gradient(135deg, #00d4ff, #7c3aed);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 5px;
+      }
+      .result-bonus {
+        font-size: 18px;
+        color: #fbbf24;
+        margin-bottom: 12px;
+      }
+      .result-message {
+        font-size: 14px;
+        color: #94a3b8;
+        margin-bottom: 20px;
+        line-height: 1.6;
+      }
+      .result-stats {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+      }
+      .stat-item {
+        text-align: center;
+        min-width: 70px;
+      }
+      .stat-value {
+        font-size: 28px;
+        font-weight: 700;
+        color: white;
+      }
+      .stat-value.correct-val {
+        color: #34d399;
+      }
+      .stat-value.incorrect-val {
+        color: #ef4444;
+      }
+      .stat-value.bonus-val {
+        color: #fbbf24;
+      }
+      .stat-value.time-val {
+        color: #00d4ff;
+      }
+      .stat-label {
+        font-size: 10px;
+        color: #64748b;
+      }
+      .result-buttons {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 15px;
+      }
+
+      .leaderboard-section {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        padding: 15px;
+        margin-top: 15px;
+        width: 100%;
+      }
+      .leaderboard-title {
+        color: #fbbf24;
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+      .leaderboard-list {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        max-height: 200px;
+        overflow-y: auto;
+      }
+      .leaderboard-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 12px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+        transition: all 0.3s;
+      }
+      .leaderboard-item.current {
+        background: rgba(124, 58, 237, 0.3);
+        border: 1px solid #7c3aed;
+      }
+      .leaderboard-item:nth-child(1) {
+        background: linear-gradient(
+          135deg,
+          rgba(255, 215, 0, 0.2),
+          rgba(255, 193, 7, 0.1)
+        );
+      }
+      .leaderboard-item:nth-child(2) {
+        background: linear-gradient(
+          135deg,
+          rgba(192, 192, 192, 0.2),
+          rgba(158, 158, 158, 0.1)
+        );
+      }
+      .leaderboard-item:nth-child(3) {
+        background: linear-gradient(
+          135deg,
+          rgba(205, 127, 50, 0.2),
+          rgba(139, 90, 43, 0.1)
+        );
+      }
+      .leaderboard-rank {
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 12px;
+        color: white;
+      }
+      .leaderboard-name {
+        flex: 1;
+        color: white;
+        font-size: 12px;
+        font-weight: 500;
+      }
+      .leaderboard-score {
+        color: #00d4ff;
+        font-size: 14px;
+        font-weight: 700;
+      }
+      .leaderboard-time {
+        color: #94a3b8;
+        font-size: 11px;
+        margin-left: 10px;
+      }
+
+      @media (max-width: 900px) {
+        .intro-content {
+          flex-direction: column;
+          gap: 15px;
+          height: auto;
+          padding: 10px;
+        }
+        .intro-visual {
+          width: 100%;
+        }
+        .comparison-slider {
+          max-width: 350px;
+          height: 280px;
+        }
+        .intro-title {
+          font-size: 22px;
+          text-align: center;
+        }
+        .intro-desc,
+        .intro-question {
+          text-align: center;
+          font-size: 13px;
+        }
+        .intro-text {
+          align-items: center;
+        }
+        .bumper-title {
+          font-size: 28px;
+        }
+      }
+    </style>
+    <style>
+      @view-transition {
+        navigation: auto;
+      }
+    </style>
+    <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+    <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+  </head>
+  <body class="h-full">
+    <div class="app-container">
+      <div class="bg-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+      </div>
+      <!-- Intro Screen -->
+      <div class="screen active" id="introScreen">
+        <div class="intro-content">
+          <div class="intro-visual">
+            <div class="comparison-slider" id="comparisonSlider">
+              <div class="comparison-before">
+                <img
+                  class="comparison-img"
+                  src="https://github.com/bayupratama16/gambar/blob/main/ChatGPT%20Image%20Jan%204,%202026,%2005_18_22%20PM.png?raw=true"
+                  alt="Sebelum - Tanpa Metodologi"
+                  onerror="
+                    this.src = '';
+                    this.alt = 'Gambar gagal dimuat';
+                    this.style.background =
+                      'linear-gradient(135deg, #1a1a2e, #16213e)';
+                  "
+                />
+                <div class="comparison-overlay before-overlay">
+                  <div class="overlay-icon">😰</div>
+                  <div class="overlay-title">SEBELUM</div>
+                  <div class="overlay-desc">
+                    Tanpa metodologi: kacau, <em>bug</em> banyak,
+                    <em>deadline</em> mepet
+                  </div>
+                </div>
+              </div>
+              <div class="comparison-after" id="comparisonAfter">
+                <img
+                  class="comparison-img"
+                  src="https://github.com/bayupratama16/gambar/blob/main/ChatGPT%20Image%20Jan%204,%202026,%2005_19_46%20PM.png?raw=true"
+                  alt="Sesudah - Dengan Waterfall"
+                  onerror="
+                    this.src = '';
+                    this.alt = 'Gambar gagal dimuat';
+                    this.style.background =
+                      'linear-gradient(135deg, #0f172a, #1e293b)';
+                  "
+                />
+                <div class="comparison-overlay after-overlay">
+                  <div class="overlay-icon">🚀</div>
+                  <div class="overlay-title">SESUDAH</div>
+                  <div class="overlay-desc">
+                    Dengan <em>Waterfall</em>: terstruktur, terdokumentasi,
+                    tepat waktu
+                  </div>
+                </div>
+              </div>
+              <div class="slider-handle" id="sliderHandle">
+                <div class="slider-line"></div>
+                <div class="slider-button">◀▶</div>
+                <div class="slider-line"></div>
+              </div>
+            </div>
+            <div class="slider-instruction">👆 Geser untuk membandingkan</div>
+          </div>
+          <div class="intro-text">
+            <h1 class="intro-title">Membangun <em>Software</em> yang Andal</h1>
+            <p class="intro-desc">
+              Setiap aplikasi hebat dimulai dari <strong>algoritma</strong> dan
+              <strong>metodologi</strong> yang tepat. Model
+              <em>Waterfall</em> memastikan pengembangan berjalan terstruktur
+              dari analisis hingga <em>deployment</em>.
+            </p>
+            <p class="intro-question">
+              Siap menguji pemahamanmu tentang alur pengembangan
+              <em>Waterfall</em>?
+            </p>
+            <button
+              class="btn btn-primary"
+              onclick="showScreen('bumperScreen')"
+            >
+              Lanjutkan →
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Bumper Screen -->
+      <div class="screen" id="bumperScreen">
+        <button class="nav-btn left" onclick="showScreen('introScreen')">
+          ← Kembali
+        </button>
+        <div class="bumper-content">
+          <div class="bumper-icon">💻</div>
+          <h1 class="bumper-title">Kuis Interaktif</h1>
+          <h2 class="bumper-subtitle">Alur Pengembangan <em>Waterfall</em></h2>
+          <p class="bumper-topic">
+            Informatika | Kelas XI SMA | Topik: Algoritma &amp; <em>SDLC</em>
+          </p>
+          <div class="name-input-wrapper">
+            <div
+              class="name-input-display empty"
+              id="nameDisplay"
+              onclick="openKeyboard('name')"
+            ></div>
+          </div>
+          <div class="bumper-buttons">
+            <button class="btn btn-secondary" onclick="showInstructions()">
+              📖 Petunjuk
+            </button>
+            <button class="btn btn-secondary" onclick="showLeaderboard()">
+              🏆 <em>Leaderboard</em>
+            </button>
+            <button
+              class="btn btn-primary"
+              id="startQuizBtn"
+              onclick="startQuiz()"
+              disabled
+            >
+              🚀 Mulai Kuis
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Quiz Screen -->
+      <div class="screen" id="quizScreen">
+        <button class="nav-btn right exit-btn" onclick="confirmExit()">
+          ✕ Keluar
+        </button>
+        <div class="quiz-container">
+          <div class="quiz-header">
+            <div class="quiz-timer" id="quizTimer">
+              ⏱️ <span id="timerDisplay">00:00</span>
+            </div>
+            <div class="quiz-progress" id="quizProgress">Soal 1/10</div>
+          </div>
+          <div class="quiz-content">
+            <div class="question-card" id="questionCard"></div>
+            <div class="quiz-nav">
+              <button
+                class="btn btn-primary btn-sm"
+                id="nextBtn"
+                onclick="nextQuestion()"
+                style="display: none"
+              >
+                Lanjut →
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Result Screen -->
+      <div class="screen" id="resultScreen">
+        <div class="result-content">
+          <div class="result-icon" id="resultIcon">🎉</div>
+          <h1 class="result-title" id="resultTitle">Kuis Selesai!</h1>
+          <div class="result-score" id="resultScore">0</div>
+          <div class="result-bonus" id="resultBonus">+ Bonus: 0</div>
+          <p class="result-message" id="resultMessage">
+            Kamu telah menyelesaikan kuis!
+          </p>
+          <div class="result-stats">
+            <div class="stat-item">
+              <div class="stat-value correct-val" id="correctCount">0</div>
+              <div class="stat-label">Benar</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value incorrect-val" id="incorrectCount">0</div>
+              <div class="stat-label">Salah</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value bonus-val" id="bonusCount">0</div>
+              <div class="stat-label">Bonus</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value time-val" id="timeDisplay">00:00</div>
+              <div class="stat-label">Waktu</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value" id="totalScore">0</div>
+              <div class="stat-label">Total</div>
+            </div>
+          </div>
+          <div class="leaderboard-section" id="resultLeaderboard"></div>
+          <div class="result-buttons">
+            <button class="btn btn-secondary" onclick="goToHome()">
+              🏠 Kembali
+            </button>
+            <button class="btn btn-primary" onclick="restartQuiz()">
+              🔄 Main Lagi
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Keyboard Overlay -->
+      <div class="keyboard-overlay" id="keyboardOverlay">
+        <div class="keyboard-container">
+          <div class="keyboard-label" id="keyboardLabel">Masukkan Nama</div>
+          <div class="keyboard-input-area empty" id="keyboardInput"></div>
+          <div class="virtual-keyboard" id="virtualKeyboard"></div>
+          <div class="keyboard-actions">
+            <button class="btn btn-secondary btn-sm" onclick="closeKeyboard()">
+              Batal
+            </button>
+            <button class="btn btn-primary btn-sm" onclick="confirmKeyboard()">
+              Konfirmasi
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Feedback -->
+      <div class="feedback-overlay" id="feedbackOverlay"></div>
+      <div class="feedback-popup" id="feedbackPopup">
+        <div class="feedback-popup-icon" id="feedbackIcon">✅</div>
+        <div class="feedback-popup-title" id="feedbackTitle">Benar!</div>
+        <button class="btn btn-primary btn-sm" onclick="closeFeedback()">
+          Lanjut
+        </button>
+      </div>
+      <!-- Confirm Exit Modal -->
+      <div class="modal-overlay" id="confirmExitModal">
+        <div class="confirm-modal">
+          <div class="confirm-icon">⚠️</div>
+          <div class="confirm-title">Keluar dari Kuis?</div>
+          <div class="confirm-message">
+            Jika keluar sekarang, kamu akan kembali ke halaman awal dan
+            <strong>skor tidak akan tersimpan</strong> di <em>leaderboard</em>.
+          </div>
+          <div class="confirm-buttons">
+            <button
+              class="btn btn-secondary btn-sm"
+              onclick="closeConfirmExit()"
+            >
+              Tidak, Lanjutkan
+            </button>
+            <button class="btn btn-danger btn-sm" onclick="exitQuiz()">
+              Ya, Keluar
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Music Control Button -->
+      <button class="music-btn" id="musicBtn" onclick="toggleMusic()">
+        🔊
+      </button>
+      <!-- Instructions Modal -->
+      <div class="modal-overlay" id="instructionsModal">
+        <div class="modal">
+          <h2 class="modal-title">📖 Petunjuk Penggunaan</h2>
+          <div class="instruction-item">
+            <span class="instruction-icon">👤</span>
+            <div class="instruction-text">
+              <strong>Nama Pemain:</strong> Masukkan namamu terlebih dahulu
+              dengan mengetuk kotak nama di halaman awal. Nama ini akan
+              ditampilkan di papan peringkat (<em>leaderboard</em>).
+            </div>
+          </div>
+          <div class="instruction-item">
+            <span class="instruction-icon">📖</span>
+            <div class="instruction-text">
+              <strong><em>Stimulus</em>:</strong> Setiap soal dilengkapi dengan
+              <em>stimulus</em> berupa kasus atau skenario. Baca dengan cermat
+              karena berisi informasi penting untuk menjawab pertanyaan.
+            </div>
+          </div>
+          <div class="instruction-item">
+            <span class="instruction-icon">🔘</span>
+            <div class="instruction-text">
+              <strong>Pilihan Ganda:</strong> Ketuk salah satu pilihan jawaban
+              (A, B, C, D, atau E). Setelah memilih, akan muncul
+              <em>feedback</em> apakah jawabanmu benar atau salah beserta
+              penjelasannya.
+            </div>
+          </div>
+          <div class="instruction-item">
+            <span class="instruction-icon">⭐</span>
+            <div class="instruction-text">
+              <strong>Soal Bonus (Opsional):</strong> Di bawah setiap soal
+              terdapat soal bonus dengan dua tipe:
+              <strong>Isian Singkat</strong> atau
+              <strong>Pilihan Ganda Kompleks</strong>. Jawab dengan benar untuk
+              mendapatkan poin ekstra (+5 poin).
+            </div>
+          </div>
+          <div class="instruction-item">
+            <span class="instruction-icon">⌨️</span>
+            <div class="instruction-text">
+              <strong>Cara Mengisi Bonus Isian:</strong> Ketuk kotak isian, lalu
+              ketik jawabanmu menggunakan <em>keyboard</em> virtual. Tekan
+              "Konfirmasi" untuk menyimpan.
+            </div>
+          </div>
+          <div class="instruction-item">
+            <span class="instruction-icon">☑️</span>
+            <div class="instruction-text">
+              <strong>Cara Menjawab Bonus Pilihan Ganda:</strong> Ketuk pilihan
+              untuk memberi tanda centang (☑). Bisa memilih lebih dari satu
+              jawaban. Semua jawaban benar harus dipilih untuk mendapat poin.
+            </div>
+          </div>
+          <div class="instruction-item">
+            <span class="instruction-icon">⏱️</span>
+            <div class="instruction-text">
+              <strong>Waktu:</strong> <em>Timer</em> akan berjalan selama kuis
+              berlangsung. Waktu penyelesaian akan dicatat dan ditampilkan di
+              hasil akhir serta papan peringkat.
+            </div>
+          </div>
+          <div class="instruction-item">
+            <span class="instruction-icon">��</span>
+            <div class="instruction-text">
+              <strong>Penilaian:</strong> Setiap jawaban benar mendapat 10 poin,
+              bonus benar mendapat 5 poin. Total skor dan waktu menentukan
+              peringkatmu di <em>leaderboard</em>.
+            </div>
+          </div>
+          <div class="instruction-item">
+            <span class="instruction-icon">🚪</span>
+            <div class="instruction-text">
+              <strong>Keluar:</strong> Jika ingin keluar di tengah kuis, tekan
+              tombol "✕ Keluar" di pojok kanan atas. Perhatian: skor tidak akan
+              tersimpan jika keluar sebelum selesai.
+            </div>
+          </div>
+          <button
+            class="btn btn-primary modal-close"
+            onclick="hideInstructions()"
+          >
+            Mengerti!
+          </button>
+        </div>
+      </div>
+      <!-- Leaderboard Modal -->
+      <div class="modal-overlay" id="leaderboardModal">
+        <div class="modal">
+          <h2 class="modal-title">🏆 Papan Peringkat (<em>Leaderboard</em>)</h2>
+          <div class="leaderboard-list" id="leaderboardList"></div>
+          <button
+            class="btn btn-primary modal-close"
+            onclick="hideLeaderboard()"
+          >
+            Tutup
+          </button>
+        </div>
+      </div>
+    </div>
+    <script>
+      const defaultConfig = { quiz_title: "Kuis Alur Pengembangan Waterfall" };
+      let config = { ...defaultConfig };
+
+      // State
+      let playerName = "";
+      let currentQuestion = 0;
+      let score = 0;
+      let bonusScore = 0;
+      let correctAnswers = 0;
+      let bonusCorrect = 0;
+      let shuffledQuestions = [];
+      let questionStates = [];
+      let keyboardInputText = "";
+      let capsLock = false;
+      let symbolMode = false;
+      let keyboardMode = "name";
+      let currentFillIndex = -1;
+      let timerInterval = null;
+      let elapsedSeconds = 0;
+      let musicEnabled = true;
+      let backgroundMusic = null;
+      let correctSound = null;
+      let incorrectSound = null;
+
+      function getLeaderboard() {
+        try {
+          const data = localStorage.getItem("waterfall_lb_v4");
+          return data ? JSON.parse(data) : [];
+        } catch (e) {
+          return [];
+        }
+      }
+      function saveLeaderboard(data) {
+        try {
+          localStorage.setItem("waterfall_lb_v4", JSON.stringify(data));
+        } catch (e) {
+          console.log("Storage error");
+        }
+      }
+
+      function initAudio() {
+        if (!backgroundMusic) {
+          backgroundMusic = new Audio(
+            "https://github.com/bayupratama16/music/raw/main/flash-quiz-loop-236356.mp3",
+          );
+          backgroundMusic.loop = true;
+          backgroundMusic.volume = 0.48;
+        }
+        if (!correctSound) {
+          correctSound = new Audio(
+            "https://github.com/bayupratama16/music/raw/main/correct-472358.mp3",
+          );
+          correctSound.volume = 0.7;
+        }
+        if (!incorrectSound) {
+          incorrectSound = new Audio(
+            "https://github.com/bayupratama16/music/raw/main/incorrect-293358.mp3",
+          );
+          incorrectSound.volume = 0.7;
+        }
+      }
+
+      function toggleMusic() {
+        if (!backgroundMusic) initAudio();
+        musicEnabled = !musicEnabled;
+        const btn = document.getElementById("musicBtn");
+        if (musicEnabled) {
+          btn.textContent = "🔊";
+          btn.classList.remove("disabled");
+          backgroundMusic.play().catch(() => {});
+        } else {
+          btn.textContent = "🔇";
+          btn.classList.add("disabled");
+          backgroundMusic.pause();
+        }
+      }
+
+      function playCorrectSound() {
+        if (!correctSound) initAudio();
+        if (musicEnabled) {
+          correctSound.currentTime = 0;
+          correctSound.play().catch(() => {});
+        }
+      }
+
+      function playIncorrectSound() {
+        if (!incorrectSound) initAudio();
+        if (musicEnabled) {
+          incorrectSound.currentTime = 0;
+          incorrectSound.play().catch(() => {});
+        }
+      }
+      function addToLeaderboard(name, totalScore, time) {
+        const lb = getLeaderboard();
+        lb.push({ name, score: totalScore, time, date: Date.now() });
+        lb.sort((a, b) => b.score - a.score || a.time - b.time);
+        saveLeaderboard(lb.slice(0, 50));
+      }
+
+      function formatTime(seconds) {
+        const m = Math.floor(seconds / 60)
+          .toString()
+          .padStart(2, "0");
+        const s = (seconds % 60).toString().padStart(2, "0");
+        return `${m}:${s}`;
+      }
+
+      function startTimer() {
+        elapsedSeconds = 0;
+        updateTimerDisplay();
+        timerInterval = setInterval(() => {
+          elapsedSeconds++;
+          updateTimerDisplay();
+        }, 1000);
+      }
+      function stopTimer() {
+        if (timerInterval) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+        }
+      }
+      function updateTimerDisplay() {
+        document.getElementById("timerDisplay").textContent =
+          formatTime(elapsedSeconds);
+      }
+
+      function shuffleArray(arr) {
+        const shuffled = [...arr];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+      }
+
+      const allQuestions = [
+        {
+          topic: "Analisis Kasus",
+          stimulus:
+            "PT. TechMaju mengembangkan aplikasi <em>e-commerce</em>. Setelah 6 bulan dengan <em>Waterfall</em>, klien mengubah <em>requirement</em> saat di tahap <em>implementation</em>. Tim harus kembali ke analisis.",
+          question: "Apa penyebab utama masalah PT. TechMaju?",
+          choices: [
+            "Metodologi kurang fleksibel",
+            "Tim kurang kompeten",
+            "Klien tidak kooperatif",
+            "Aplikasi terlalu kompleks",
+            "Anggaran sangat terbatas",
+          ],
+          correct: 0,
+          explanation:
+            "<em>Waterfall</em> bersifat <em>sequential</em> sehingga perubahan di tengah jalan memerlukan pengulangan tahapan.",
+          bonus: {
+            type: "fill",
+            instruction: "Lengkapi urutan tahapan <em>Waterfall</em>:",
+            template: [
+              "",
+              " → ",
+              " → <em>Implementation</em> → <em>Testing</em> → <em>Deployment</em>",
+            ],
+            answers: ["Requirement", "Design"],
+            blanks: 2,
+          },
+        },
+        {
+          topic: "Estimasi Biaya",
+          stimulus:
+            "<em>Bug</em> ditemukan saat <em>deployment</em>, berasal dari kesalahan analisis. Biaya perbaikan di tahap awal = Rp 10 juta. Biaya naik 10× setiap melewati satu tahap.",
+          question:
+            "Berapa estimasi biaya perbaikan di tahap <em>deployment</em>?",
+          choices: [
+            "Rp 10 miliar",
+            "Rp 100 juta saja",
+            "Rp 1 miliar rupiah",
+            "Rp 50 juta saja",
+            "Rp 500 juta rupiah",
+          ],
+          correct: 0,
+          explanation:
+            "Dari <em>Requirement</em>→<em>Design</em>→<em>Implementation</em>→<em>Testing</em>→<em>Deployment</em> = 4 tahap. Jadi 10 juta × 10⁴ = Rp 10 miliar.",
+          bonus: {
+            type: "multiple",
+            instruction:
+              "Pilih SEMUA faktor yang mempengaruhi biaya perbaikan <em>bug</em>:",
+            choices: [
+              "Tahap ditemukannya <em>bug</em>",
+              "Kompleksitas <em>bug</em>",
+              "Warna logo perusahaan",
+              "Jumlah modul terdampak",
+              "Cuaca saat <em>deployment</em>",
+            ],
+            correctIndexes: [0, 1, 3],
+          },
+        },
+        {
+          topic: "Pemilihan Metodologi",
+          stimulus:
+            "Bank Nasional mengembangkan <em>core banking</em>. Regulasi OJK: (1) dokumentasi lengkap, (2) <em>requirement</em> tidak berubah, (3) setiap tahap dapat dilacak.",
+          question: "Metodologi apa yang paling tepat?",
+          choices: [
+            "<em>Waterfall</em> tradisional",
+            "<em>Agile</em> atau <em>Scrum</em>",
+            "<em>Kanban</em> murni",
+            "<em>Extreme Programming</em>",
+            "<em>Lean Development</em>",
+          ],
+          correct: 0,
+          explanation:
+            "Ketiga syarat (dokumentasi, <em>requirement</em> tetap, <em>traceability</em>) adalah kekuatan utama <em>Waterfall</em>.",
+          bonus: {
+            type: "multiple",
+            instruction:
+              "Pilih SEMUA kelebihan <em>Waterfall</em> untuk proyek perbankan:",
+            choices: [
+              "Dokumentasi lengkap",
+              "<em>Traceability</em> tinggi",
+              "Mudah berubah kapan saja",
+              "<em>Milestone</em> jelas",
+              "<em>Customer</em> selalu terlibat",
+            ],
+            correctIndexes: [0, 1, 3],
+          },
+        },
+        {
+          topic: "<em>Change Management</em>",
+          stimulus:
+            "Proyek ERP di tahap <em>design</em>. SRS sudah di-<em>approve</em> 5 <em>stakeholder</em>. Direktur minta tambah modul HR yang tidak ada di SRS.",
+          question: "Apa yang harus dilakukan PM?",
+          choices: [
+            "Buat <em>change request</em>",
+            "Langsung tambahkan",
+            "Tolak permintaan itu",
+            "Mulai ulang proyek",
+            "Delegasi ke tim",
+          ],
+          correct: 0,
+          explanation:
+            "Dalam <em>Waterfall</em>, perubahan pasca-<em>approval</em> harus melalui proses formal: <em>change request</em> dan <em>impact analysis</em>.",
+          bonus: {
+            type: "fill",
+            instruction: "Lengkapi proses perubahan dalam <em>Waterfall</em>:",
+            template: ["Buat ", " → Lakukan ", " → Dapatkan <em>approval</em>"],
+            answers: ["change request", "impact analysis"],
+            blanks: 2,
+          },
+        },
+        {
+          topic: "Risiko Integrasi",
+          stimulus:
+            "Tim membangun 8 modul terpisah selama 10 bulan. Semua diintegrasikan di minggu terakhir. Hasilnya: 247 <em>bug</em> muncul bersamaan dan sulit diidentifikasi.",
+          question: "Apa kelemahan utama integrasi ini?",
+          choices: [
+            "<em>Bug</em> sulit dilacak",
+            "Biaya <em>server</em> tinggi",
+            "Tim harus lembur",
+            "Dokumentasi hilang",
+            "Klien sangat kecewa",
+          ],
+          correct: 0,
+          explanation:
+            "<em>Big Bang Integration</em> menyebabkan 247 <em>bug</em> muncul bersamaan dan sulit diidentifikasi sumbernya.",
+          bonus: {
+            type: "multiple",
+            instruction:
+              "Pilih SEMUA strategi integrasi yang lebih baik dari <em>Big Bang</em>:",
+            choices: [
+              "<em>Incremental Integration</em>",
+              "<em>Continuous Integration</em>",
+              "<em>Random Integration</em>",
+              "<em>Top-Down Integration</em>",
+              "<em>Lucky Integration</em>",
+            ],
+            correctIndexes: [0, 1, 3],
+          },
+        },
+        {
+          topic: "<em>Hybrid Model</em>",
+          stimulus:
+            "Perusahaan butuh: (1) dokumentasi awal untuk direksi, (2) fleksibilitas saat <em>development</em>, (3) dokumentasi akhir untuk serah terima.",
+          question: "Model <em>hybrid</em> apa yang tepat?",
+          choices: [
+            "<em>Water-Scrum-Fall</em>",
+            "<em>Waterfall</em> murni",
+            "<em>Scrum</em> murni saja",
+            "<em>Kanban</em> murni saja",
+            "<em>Extreme Programming</em>",
+          ],
+          correct: 0,
+          explanation:
+            "<em>Water-Scrum-Fall</em> menggabungkan: <em>Waterfall</em> di awal, <em>Scrum</em> di tengah, <em>Waterfall</em> di akhir.",
+          bonus: {
+            type: "fill",
+            instruction: "Lengkapi pola <em>Water-Scrum-Fall</em>:",
+            template: [
+              "",
+              " di awal → <em>Scrum</em> di tengah → ",
+              " di akhir",
+            ],
+            answers: ["Waterfall", "Waterfall"],
+            blanks: 2,
+          },
+        },
+        {
+          topic: "Keterlibatan <em>Customer</em>",
+          stimulus:
+            "Proyek 18 bulan. <em>Customer</em> hadir 2 kali: bulan 1 (<em>requirement</em>) dan bulan 18 (<em>acceptance</em>). Setelah selesai, <em>customer</em> kecewa meski semua <em>requirement</em> terpenuhi.",
+          question: "Mengapa <em>customer</em> kecewa?",
+          choices: [
+            "Ekspektasi sudah berubah",
+            "<em>Developer</em> sangat buruk",
+            "Terlalu banyak <em>bug</em>",
+            "Dokumentasi sangat kurang",
+            "<em>Server</em> sangat lambat",
+          ],
+          correct: 0,
+          explanation:
+            "Jarak 17 bulan tanpa <em>feedback</em> menyebabkan ekspektasi <em>customer</em> berevolusi tanpa diketahui tim.",
+          bonus: {
+            type: "multiple",
+            instruction:
+              "Pilih SEMUA kelemahan <em>Waterfall</em> terkait <em>customer</em>:",
+            choices: [
+              "Keterlibatan <em>customer</em> minim",
+              "<em>Feedback</em> terlambat",
+              "Terlalu banyak dokumentasi",
+              "Ekspektasi bisa berubah",
+              "Biaya selalu mahal",
+            ],
+            correctIndexes: [0, 1, 3],
+          },
+        },
+        {
+          topic: "<em>Safety-Critical</em>",
+          stimulus:
+            "Industri penerbangan membuat <em>software</em> kendali. Regulasi DO-178C: (1) <em>traceability</em> ke <em>requirement</em>, (2) dokumentasi <em>design</em>, (3) pengujian formal.",
+          question: "Mengapa <em>Waterfall</em> cocok untuk ini?",
+          choices: [
+            "<em>Traceability</em> dan dokumentasi",
+            "Waktu paling cepat",
+            "Biaya paling murah",
+            "Tidak perlu <em>testing</em>",
+            "<em>Customer</em> lebih bebas",
+          ],
+          correct: 0,
+          explanation:
+            "Ketiga syarat regulasi (<em>traceability</em>, dokumentasi, pengujian formal) adalah karakteristik utama <em>Waterfall</em>.",
+          bonus: {
+            type: "multiple",
+            instruction:
+              "Pilih SEMUA industri yang cocok menggunakan <em>Waterfall</em>:",
+            choices: [
+              "Penerbangan",
+              "Medis/Kesehatan",
+              "<em>Startup</em> aplikasi sosial",
+              "Pembangkit Nuklir",
+              "Game <em>mobile</em> kasual",
+            ],
+            correctIndexes: [0, 1, 3],
+          },
+        },
+        {
+          topic: "<em>Testing</em>",
+          stimulus:
+            "Proyek inventori: <em>testing</em> hanya di akhir. Hasilnya: 89 <em>bug</em>, 23 perlu ubah <em>design</em>, 8 perlu ubah <em>requirement</em>.",
+          question: "Apa masalah strategi <em>testing</em> ini?",
+          choices: [
+            "<em>Rework</em> sangat besar",
+            "<em>Tester</em> sangat kurang",
+            "Waktu sangat singkat",
+            "Alat tidak tersedia",
+            "<em>Test case</em> buruk",
+          ],
+          correct: 0,
+          explanation:
+            "23 <em>bug</em> perlu ubah <em>design</em> dan 8 perlu ubah <em>requirement</em> berarti harus kembali ke tahap sebelumnya (<em>rework</em>).",
+          bonus: {
+            type: "fill",
+            instruction: "Lengkapi solusi <em>V-Model</em>:",
+            template: ["<em>V-Model</em> melakukan ", " paralel dengan ", ""],
+            answers: ["testing", "development"],
+            blanks: 2,
+          },
+        },
+        {
+          topic: "Dokumentasi",
+          stimulus:
+            "Sistem bank berusia 8 tahun perlu <em>maintenance</em>. Tim asli sudah keluar. Untungnya ada dokumentasi lengkap: SRS, SDD, <em>test cases</em>, <em>user manual</em>.",
+          question: "Bagaimana dokumentasi membantu?",
+          choices: [
+            "Pahami sistem mandiri",
+            "Dijual ke <em>vendor</em>",
+            "<em>Maintenance</em> gratis",
+            "Tidak perlu <em>update</em>",
+            "Tim lama kembali",
+          ],
+          correct: 0,
+          explanation:
+            "Dokumentasi lengkap memungkinkan <em>knowledge transfer</em> ke tim baru tanpa bergantung tim lama.",
+          bonus: {
+            type: "multiple",
+            instruction:
+              "Pilih SEMUA dokumen standar dalam <em>Waterfall</em>:",
+            choices: [
+              "SRS (<em>Software Requirement Specification</em>)",
+              "SDD (<em>Software Design Document</em>)",
+              "<em>Social Media Plan</em>",
+              "<em>Test Cases</em>",
+              "<em>Marketing Budget</em>",
+            ],
+            correctIndexes: [0, 1, 3],
+          },
+        },
+      ];
+
+      function buildKeyboard() {
+        const letters = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"];
+        const symbols = ["1234567890", "!@#$%^&*()", "-_=+[]{}"];
+        const rows = symbolMode ? symbols : letters;
+
+        let html = "";
+        rows.forEach((row, ri) => {
+          html += '<div class="keyboard-row">';
+          if (ri === 2 && !symbolMode)
+            html += `<button class="key special ${capsLock ? "active" : ""}" onclick="toggleCaps()">⬆ CAPS</button>`;
+          for (let char of row) {
+            const display =
+              !symbolMode && !capsLock ? char.toLowerCase() : char;
+            html += `<button class="key" onclick="typeChar('${char}')">${display}</button>`;
+          }
+          if (ri === 2)
+            html +=
+              '<button class="key special" onclick="deleteChar()">⌫</button>';
+          html += "</div>";
+        });
+        html += `<div class="keyboard-row">
+        <button class="key special" onclick="toggleSymbol()">${symbolMode ? "ABC" : "123"}</button>
+        <button class="key space" onclick="typeChar(' ')">SPASI</button>
+        <button class="key special" onclick="typeChar('.')">.</button>
+      </div>`;
+        document.getElementById("virtualKeyboard").innerHTML = html;
+      }
+
+      function openKeyboard(mode, index = -1) {
+        keyboardMode = mode;
+        currentFillIndex = index;
+        if (mode === "name") {
+          keyboardInputText = playerName;
+          document.getElementById("keyboardLabel").textContent =
+            "Masukkan Nama";
+        } else if (mode === "fill") {
+          const state = questionStates[currentQuestion];
+          keyboardInputText = state.fillValues[index] || "";
+          document.getElementById("keyboardLabel").textContent =
+            "Masukkan Jawaban";
+        }
+        capsLock = false;
+        symbolMode = false;
+        updateKeyboardDisplay();
+        buildKeyboard();
+        document.getElementById("keyboardOverlay").classList.add("active");
+      }
+
+      function closeKeyboard() {
+        document.getElementById("keyboardOverlay").classList.remove("active");
+      }
+
+      function confirmKeyboard() {
+        if (keyboardMode === "name") {
+          playerName = keyboardInputText.trim();
+          const display = document.getElementById("nameDisplay");
+          if (playerName) {
+            display.textContent = playerName;
+            display.classList.remove("empty");
+          } else {
+            display.textContent = "";
+            display.classList.add("empty");
+          }
+          updateStartButton();
+        } else if (keyboardMode === "fill" && currentFillIndex >= 0) {
+          const state = questionStates[currentQuestion];
+          state.fillValues[currentFillIndex] = keyboardInputText.trim();
+          renderBonusOnly();
+        }
+        closeKeyboard();
+      }
+
+      function typeChar(c) {
+        if (keyboardInputText.length >= 30) return;
+        keyboardInputText += !symbolMode && !capsLock ? c.toLowerCase() : c;
+        updateKeyboardDisplay();
+      }
+      function deleteChar() {
+        keyboardInputText = keyboardInputText.slice(0, -1);
+        updateKeyboardDisplay();
+      }
+      function toggleCaps() {
+        capsLock = !capsLock;
+        buildKeyboard();
+      }
+      function toggleSymbol() {
+        symbolMode = !symbolMode;
+        buildKeyboard();
+      }
+      function updateKeyboardDisplay() {
+        const el = document.getElementById("keyboardInput");
+        el.textContent = keyboardInputText;
+        el.classList.toggle("empty", !keyboardInputText);
+      }
+
+      function resetNameInput() {
+        playerName = "";
+        keyboardInputText = "";
+        const display = document.getElementById("nameDisplay");
+        display.textContent = "";
+        display.classList.add("empty");
+        updateStartButton();
+      }
+
+      function updateStartButton() {
+        const btn = document.getElementById("startQuizBtn");
+        btn.disabled = !playerName.trim();
+      }
+
+      function initSlider() {
+        const slider = document.getElementById("comparisonSlider");
+        const after = document.getElementById("comparisonAfter");
+        const handle = document.getElementById("sliderHandle");
+        if (!slider) return;
+        let dragging = false;
+        const update = (x) => {
+          const rect = slider.getBoundingClientRect();
+          let pos = Math.max(
+            5,
+            Math.min(95, ((x - rect.left) / rect.width) * 100),
+          );
+          after.style.clipPath = `inset(0 0 0 ${pos}%)`;
+          handle.style.left = pos + "%";
+        };
+        slider.addEventListener("mousedown", (e) => {
+          dragging = true;
+          update(e.clientX);
+        });
+        document.addEventListener("mousemove", (e) => {
+          if (dragging) update(e.clientX);
+        });
+        document.addEventListener("mouseup", () => {
+          dragging = false;
+        });
+        slider.addEventListener(
+          "touchstart",
+          (e) => {
+            dragging = true;
+            update(e.touches[0].clientX);
+          },
+          { passive: true },
+        );
+        slider.addEventListener(
+          "touchmove",
+          (e) => {
+            if (dragging) update(e.touches[0].clientX);
+          },
+          { passive: true },
+        );
+        slider.addEventListener("touchend", () => {
+          dragging = false;
+        });
+      }
+
+      function showScreen(id) {
+        document
+          .querySelectorAll(".screen")
+          .forEach((s) => s.classList.remove("active"));
+        document.getElementById(id).classList.add("active");
+        if (id !== "quizScreen") stopTimer();
+      }
+
+      function goToHome() {
+        resetNameInput();
+        showScreen("bumperScreen");
+      }
+      function showInstructions() {
+        document.getElementById("instructionsModal").classList.add("active");
+      }
+      function hideInstructions() {
+        document.getElementById("instructionsModal").classList.remove("active");
+      }
+      function showLeaderboard() {
+        renderLeaderboard("leaderboardList");
+        document.getElementById("leaderboardModal").classList.add("active");
+      }
+      function hideLeaderboard() {
+        document.getElementById("leaderboardModal").classList.remove("active");
+      }
+      function confirmExit() {
+        document.getElementById("confirmExitModal").classList.add("active");
+      }
+      function closeConfirmExit() {
+        document.getElementById("confirmExitModal").classList.remove("active");
+      }
+      function exitQuiz() {
+        closeConfirmExit();
+        stopTimer();
+        resetNameInput();
+        showScreen("bumperScreen");
+      }
+
+      function renderLeaderboard(containerId, highlight = null) {
+        const lb = getLeaderboard();
+        const container = document.getElementById(containerId);
+        if (!lb.length) {
+          container.innerHTML =
+            '<p style="color:#94a3b8;text-align:center;padding:20px;">Belum ada data.</p>';
+          return;
+        }
+        container.innerHTML = lb
+          .slice(0, 10)
+          .map((item, i) => {
+            const isCurrent =
+              highlight &&
+              item.name === highlight.name &&
+              item.score === highlight.score &&
+              item.time === highlight.time;
+            const rankIcon =
+              i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : i + 1;
+            return `<div class="leaderboard-item ${isCurrent ? "current" : ""}">
+          <div class="leaderboard-rank">${rankIcon}</div>
+          <div class="leaderboard-name">${item.name}</div>
+          <div class="leaderboard-score">${item.score}</div>
+          <div class="leaderboard-time">⏱️ ${formatTime(item.time)}</div>
+        </div>`;
+          })
+          .join("");
+      }
+
+      function startQuiz() {
+        if (!playerName.trim()) return;
+        currentQuestion = 0;
+        score = 0;
+        bonusScore = 0;
+        correctAnswers = 0;
+        bonusCorrect = 0;
+        shuffledQuestions = shuffleArray(allQuestions).slice(0, 10);
+        questionStates = shuffledQuestions.map((q) => {
+          const choicesWithIndex = q.choices.map((c, i) => ({
+            text: c,
+            originalIndex: i,
+          }));
+          const shuffledChoices = shuffleArray(choicesWithIndex);
+          const bonusState = {
+            answered: false,
+            bonusAnswered: false,
+            bonusSubmitted: false,
+            selectedAnswer: null,
+            shuffledChoices,
+            isCorrect: null,
+            bonusCorrect: null,
+          };
+          if (q.bonus.type === "fill") {
+            bonusState.fillValues = new Array(q.bonus.blanks).fill("");
+          } else if (q.bonus.type === "multiple") {
+            bonusState.multipleSelected = [];
+          }
+          return bonusState;
+        });
+        startTimer();
+        renderQuestion();
+        showScreen("quizScreen");
+      }
+
+      function restartQuiz() {
+        resetNameInput();
+        showScreen("bumperScreen");
+      }
+
+      function renderQuestion() {
+        const q = shuffledQuestions[currentQuestion];
+        const state = questionStates[currentQuestion];
+        const canProceed = state.answered;
+        document.getElementById("nextBtn").style.display = canProceed
+          ? "inline-block"
+          : "none";
+        document.getElementById("quizProgress").textContent =
+          `Soal ${currentQuestion + 1}/${shuffledQuestions.length}`;
+
+        const letters = ["A", "B", "C", "D", "E"];
+        let html = `
+        <div class="question-header">
+          <div class="question-type">🔘 Pilihan Ganda</div>
+          <div class="question-topic">📚 ${q.topic}</div>
+        </div>
+        <div class="stimulus-box">
+          <span class="stimulus-label">📖 <em>STIMULUS</em></span>
+          ${q.stimulus}
+        </div>
+        <div class="question-text">${q.question}</div>
+        <div class="choices-grid">
+          ${state.shuffledChoices
+            .map((c, i) => {
+              let classes = "choice-btn";
+              if (state.answered) {
+                const correctShuffledIndex = state.shuffledChoices.findIndex(
+                  (sc) => sc.originalIndex === q.correct,
+                );
+                if (i === correctShuffledIndex && state.isCorrect)
+                  classes += " correct";
+                else if (i === state.selectedAnswer)
+                  classes += state.isCorrect ? " correct" : " incorrect";
+              } else if (i === state.selectedAnswer) {
+                classes += " selected";
+              }
+              return `<button class="${classes}" data-index="${i}" ${state.answered ? "disabled" : ""} onclick="selectChoice(${i})">
+              <span class="choice-letter">${letters[i]}</span><span>${c.text}</span>
+            </button>`;
+            })
+            .join("")}
+        </div>
+        <div class="bonus-section" id="bonusSection">
+          <div class="bonus-title">⭐ BONUS (+5 poin) ${q.bonus.type === "multiple" ? "• Pilihan Ganda Kompleks" : "• Isian Singkat"}</div>
+          ${renderBonus(q, state)}
+          ${!state.bonusSubmitted ? '<button class="btn btn-sm" style="background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #1e1b4b; margin-top: 10px; width: 100%;" onclick="submitBonus()">Kirim Jawaban Bonus</button>' : ""}
+        </div>
+      `;
+        document.getElementById("questionCard").innerHTML = html;
+      }
+
+      function renderBonusOnly() {
+        const q = shuffledQuestions[currentQuestion];
+        const state = questionStates[currentQuestion];
+        const bonusSection = document.getElementById("bonusSection");
+        if (bonusSection) {
+          bonusSection.innerHTML = `
+          <div class="bonus-title">⭐ BONUS (+5 poin) ${q.bonus.type === "multiple" ? "• Pilihan Ganda Kompleks" : "• Isian Singkat"}</div>
+          ${renderBonus(q, state)}
+          ${!state.bonusSubmitted ? '<button class="btn btn-sm" style="background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #1e1b4b; margin-top: 10px; width: 100%;" onclick="submitBonus()">Kirim Jawaban Bonus</button>' : ""}
+        `;
+        }
+      }
+
+      function renderBonus(q, state) {
+        const b = q.bonus;
+        let html = `<div class="bonus-instruction">${b.instruction}</div>`;
+
+        if (b.type === "fill") {
+          html += '<div class="fill-blank-container">';
+          let blankIdx = 0;
+          b.template.forEach((part) => {
+            html += `<span>${part}</span>`;
+            if (blankIdx < b.blanks) {
+              const val = state.fillValues[blankIdx];
+              const displayVal = val || "ketuk...";
+              let inputClass = "fill-blank-input";
+              if (!val) inputClass += " placeholder";
+              if (state.bonusSubmitted) {
+                const userVal = (val || "").toLowerCase().trim();
+                const correctVal = b.answers[blankIdx].toLowerCase().trim();
+                inputClass +=
+                  userVal === correctVal ? " correct" : " incorrect";
+              }
+              const clickHandler = state.bonusSubmitted
+                ? ""
+                : `openKeyboard('fill', ${blankIdx})`;
+              html += `<span class="${inputClass}" id="fillBlank${blankIdx}" onclick="${clickHandler}">${displayVal}</span>`;
+              blankIdx++;
+            }
+          });
+          html += "</div>";
+        } else if (b.type === "multiple") {
+          html += '<div class="bonus-choices">';
+          b.choices.forEach((choice, i) => {
+            const isSelected =
+              state.multipleSelected && state.multipleSelected.includes(i);
+            const isCorrectAnswer = b.correctIndexes.includes(i);
+            let choiceClass = "bonus-choice-btn";
+            if (isSelected) choiceClass += " selected";
+            if (state.bonusSubmitted) {
+              if (isCorrectAnswer && isSelected) choiceClass += " correct";
+              else if (isCorrectAnswer && !isSelected) choiceClass += " missed";
+              else if (!isCorrectAnswer && isSelected)
+                choiceClass += " incorrect";
+            }
+            const clickHandler = state.bonusSubmitted
+              ? ""
+              : `toggleMultipleChoice(${i})`;
+            const checkIcon = isSelected ? "☑" : "☐";
+            html += `<button class="${choiceClass}" onclick="${clickHandler}" ${state.bonusSubmitted ? "disabled" : ""}>
+            <span class="bonus-check">${checkIcon}</span>
+            <span>${choice}</span>
+          </button>`;
+          });
+          html += "</div>";
+        }
+
+        return html;
+      }
+
+      function toggleMultipleChoice(index) {
+        const state = questionStates[currentQuestion];
+        if (state.bonusSubmitted) return;
+
+        if (!state.multipleSelected) state.multipleSelected = [];
+        const idx = state.multipleSelected.indexOf(index);
+        if (idx === -1) {
+          state.multipleSelected.push(index);
+        } else {
+          state.multipleSelected.splice(idx, 1);
+        }
+        renderBonusOnly();
+      }
+
+      function selectChoice(index) {
+        const state = questionStates[currentQuestion];
+        if (state.answered) return;
+        state.answered = true;
+        state.selectedAnswer = index;
+
+        const q = shuffledQuestions[currentQuestion];
+        const selectedOriginal = state.shuffledChoices[index].originalIndex;
+        state.isCorrect = selectedOriginal === q.correct;
+
+        if (state.isCorrect) {
+          score += 10;
+          correctAnswers++;
+        }
+
+        showFeedback(state.isCorrect, q, state);
+      }
+
+      function submitBonus() {
+        const q = shuffledQuestions[currentQuestion];
+        const state = questionStates[currentQuestion];
+        if (state.bonusSubmitted) return;
+
+        state.bonusSubmitted = true;
+        state.bonusAnswered = true;
+
+        const b = q.bonus;
+        let bonusOk = false;
+
+        if (b.type === "fill") {
+          bonusOk = state.fillValues.every(
+            (val, i) =>
+              (val || "").toLowerCase().trim() ===
+              b.answers[i].toLowerCase().trim(),
+          );
+        } else if (b.type === "multiple") {
+          const selected = state.multipleSelected || [];
+          const correctSet = new Set(b.correctIndexes);
+          const selectedSet = new Set(selected);
+          bonusOk =
+            correctSet.size === selectedSet.size &&
+            [...correctSet].every((x) => selectedSet.has(x));
+        }
+
+        state.bonusCorrect = bonusOk;
+        if (bonusOk) {
+          bonusScore += 5;
+          bonusCorrect++;
+        }
+
+        renderQuestion();
+      }
+
+      function showFeedback(isCorrect, q, state) {
+        const popup = document.getElementById("feedbackPopup");
+        const overlay = document.getElementById("feedbackOverlay");
+        popup.className =
+          "feedback-popup show " + (isCorrect ? "correct" : "incorrect");
+        overlay.classList.add("show");
+        document.getElementById("feedbackIcon").textContent = isCorrect
+          ? "✅"
+          : "❌";
+        document.getElementById("feedbackTitle").textContent = isCorrect
+          ? "Benar!"
+          : "Salah!";
+
+        if (isCorrect) {
+          playCorrectSound();
+        } else {
+          playIncorrectSound();
+        }
+      }
+
+      function closeFeedback() {
+        document.getElementById("feedbackPopup").classList.remove("show");
+        document.getElementById("feedbackOverlay").classList.remove("show");
+        renderQuestion();
+      }
+
+      function nextQuestion() {
+        if (currentQuestion < shuffledQuestions.length - 1) {
+          currentQuestion++;
+          renderQuestion();
+          document.getElementById("questionCard").scrollTop = 0;
+        } else {
+          showResults();
+        }
+      }
+
+      function showResults() {
+        stopTimer();
+        const totalScore = score + bonusScore;
+        const pct = Math.round(
+          (correctAnswers / shuffledQuestions.length) * 100,
+        );
+        addToLeaderboard(playerName, totalScore, elapsedSeconds);
+
+        let icon = "🎉",
+          title = "Luar Biasa!",
+          msg = "Kamu sangat memahami alur pengembangan <em>Waterfall</em>!";
+        if (pct < 50) {
+          icon = "📚";
+          title = "Tetap Semangat!";
+          msg = "Pelajari lagi materi tentang <em>SDLC Waterfall</em>!";
+        } else if (pct < 75) {
+          icon = "👍";
+          title = "Bagus!";
+          msg = "Pemahaman cukup baik. Tingkatkan terus!";
+        }
+
+        document.getElementById("resultIcon").textContent = icon;
+        document.getElementById("resultTitle").textContent = title;
+        document.getElementById("resultScore").textContent = score;
+        document.getElementById("resultBonus").textContent =
+          `+ Bonus: ${bonusScore}`;
+        document.getElementById("resultMessage").innerHTML = msg;
+        document.getElementById("correctCount").textContent = correctAnswers;
+        document.getElementById("incorrectCount").textContent =
+          shuffledQuestions.length - correctAnswers;
+        document.getElementById("bonusCount").textContent = bonusCorrect;
+        document.getElementById("timeDisplay").textContent =
+          formatTime(elapsedSeconds);
+        document.getElementById("totalScore").textContent = totalScore;
+
+        document.getElementById("resultLeaderboard").innerHTML =
+          `<div class="leaderboard-title">🏆 Papan Peringkat (<em>Leaderboard</em>)</div><div class="leaderboard-list" id="resultLbList"></div>`;
+        renderLeaderboard("resultLbList", {
+          name: playerName,
+          score: totalScore,
+          time: elapsedSeconds,
+        });
+
+        showScreen("resultScreen");
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        updateStartButton();
+        initSlider();
+        initAudio();
+        if (musicEnabled && backgroundMusic) {
+          backgroundMusic.play().catch(() => {});
+        }
+      });
+
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange: async (c) => {
+            config = { ...config, ...c };
+          },
+          mapToCapabilities: () => ({
+            recolorables: [],
+            borderables: [],
+            fontEditable: undefined,
+            fontSizeable: undefined,
+          }),
+          mapToEditPanelValues: (c) => new Map([["quiz_title", c.quiz_title]]),
+        });
+      }
+    </script>
+    <script>
+      (function () {
+        function c() {
+          var b = a.contentDocument || a.contentWindow.document;
+          if (b) {
+            var d = b.createElement("script");
+            d.innerHTML =
+              "window.__CF$cv$params={r:'9c77bd1ae15c38f0',t:'MTc3MDAxNDg2My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
+            b.getElementsByTagName("head")[0].appendChild(d);
+          }
+        }
+        if (document.body) {
+          var a = document.createElement("iframe");
+          a.height = 1;
+          a.width = 1;
+          a.style.position = "absolute";
+          a.style.top = 0;
+          a.style.left = 0;
+          a.style.border = "none";
+          a.style.visibility = "hidden";
+          document.body.appendChild(a);
+          if ("loading" !== document.readyState) c();
+          else if (window.addEventListener)
+            document.addEventListener("DOMContentLoaded", c);
+          else {
+            var e = document.onreadystatechange || function () {};
+            document.onreadystatechange = function (b) {
+              e(b);
+              "loading" !== document.readyState &&
+                ((document.onreadystatechange = e), c());
+            };
+          }
+        }
+      })();
+    </script>
+  </body>
+</html>
